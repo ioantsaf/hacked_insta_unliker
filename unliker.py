@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 from sys import exit
 
-from instagram_private_api import Client
+from instagram_private_api import Client, ClientError
 from tqdm import tqdm
 
 excluded_users = []
@@ -58,7 +58,17 @@ def remove_likes(client):
     print('Removing suspicious likes...\n')
     for l in tqdm(suspicious_likes):
         media_id = l['id']
-        client.delete_like(media_id, module_name='feed_liked')
+        try:
+            client.delete_like(media_id, module_name='feed_liked')
+        except ClientError as e:
+            if 'feedback_required' in e.msg:
+                print('Error removing like')
+                pass
+            elif 'challenge_required' in e.msg:
+                print('Your Instagram account is locked. Please unlock it using the mobile app, then run the script again.')
+                raise e
+            else:
+                raise e
         sleep()
     print('\nRemoved suspicious likes')
 
