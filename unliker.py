@@ -1,12 +1,17 @@
 import datetime
 import json
+import random
+import time
 from pathlib import Path
 from sys import exit
 
 from instagram_private_api import Client
+from tqdm import tqdm
 
 excluded_users = []
 suspicious_likes = []
+s_min = 0.5
+s_max = 2.0
 
 
 def is_suspicious(liked_item):
@@ -50,14 +55,18 @@ def process_like_page(client, date_threshold, next_max_id=None):
 
 
 def remove_likes(client):
-    print('Removing suspicious likes...')
-    for l in suspicious_likes:
+    print('Removing suspicious likes...\n')
+    for l in tqdm(suspicious_likes):
         media_id = l['id']
         client.delete_like(media_id, module_name='feed_liked')
-    print('Removed suspicious likes')
+        sleep()
+    print('\nRemoved suspicious likes')
 
 
 def print_suspicious_users():
+    if len(suspicious_likes) == 0:
+        print('No suspicious likes found. Exiting.')
+        exit(0)
     usernames = set()
     for l in suspicious_likes:
         usernames.add(get_username(l))
@@ -102,6 +111,10 @@ def display_menu(client):
         display_menu(client)
 
 
+def sleep():
+    time.sleep(round(random.uniform(s_min, s_max), 2))
+
+
 def main():
     date_threshold_str = '2020/09/01'
     username = None
@@ -115,6 +128,10 @@ def main():
             password = config.get('password')
             if 'date_threshold_str' in config:
                 date_threshold_str = config['date_threshold_str']
+            global s_min
+            s_min = config.get('s_min', s_min)
+            global s_max
+            s_max = config.get('s_max', s_max)
 
     if username is None:
         username = input("Enter insta username\n").strip()
@@ -127,6 +144,7 @@ def main():
 
     (process_next_page, next_max_id) = process_like_page(client, date_threshold)
     while process_next_page:
+        sleep()
         (process_next_page, next_max_id) = process_like_page(client, date_threshold, next_max_id)
     print(f'Processed likes. Found {len(suspicious_likes)} suspicious likes.')
 

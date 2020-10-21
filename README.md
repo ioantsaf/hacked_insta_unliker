@@ -8,14 +8,28 @@ Uses the [instagram_private_api](https://github.com/ping/instagram_private_api) 
 
 ## Installation
 
+Python 3.6+ is required
 ```
 pip install -r requirements.txt
 ```
 
 ## Usage
 
-Either provide the username and password by creating a `config.json` file with the structure of `config.json.example`, or enter the username and password while running the script.
-Your credentials will only be used once and will not be saved.
+### Configuration
+
+The file `config.json.example` can optionally be copied to `config.json`, to define your username and password and change some default values:
+- `username`: Your Instagram username. Can also be entered when the script runs.
+- `password`: Your Instagram username. Can also be entered when the script runs.
+- `date_threshold_str`: The date after which your likes are being scanned
+- `s_min`: The minimum time in seconds to wait before removing a like
+- `s_max`: The maximum time in seconds to wait before removing a like
+
+The values `s_min` and `s_max` are used to avoid rate limiting. If you want the script to run fast, you can set both values to 0.
+Your account may receive a temporary lock, if you have many likes to remove.
+
+When you enter your credentials while the script runs, they are only used once and will not be saved.
+
+### Execution
 
 ```
 python unliker.py

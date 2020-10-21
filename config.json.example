@@ -1,5 +1,7 @@
 {
     "username": "user",
     "password": "pass",
-    "date_threshold_str": "2020/09/01"
+    "date_threshold_str": "2020/09/01",
+    "s_min": 0.5,
+    "s_max": 2.0
 }
