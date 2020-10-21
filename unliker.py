@@ -54,7 +54,7 @@ def remove_likes(client):
     for l in suspicious_likes:
         media_id = l["id"]
         client.delete_like(media_id, module_name="feed_liked")
-    print("Removed suspicious likes")
+    print("Removed suspicious likes.")
 
 
 def print_suspicious_users():
