@@ -47,9 +47,9 @@ def process_like_page(client, date_threshold, next_max_id=None):
     process_next_page = False
     has_next_page = liked['more_available'] and next_max_id is not None
     for item in liked["items"]:
-        if is_suspicious(item):
-            suspicious_likes.append(item)
         if get_taken_at_timestamp(item) > date_threshold:
+            if is_suspicious(item):
+                suspicious_likes.append(item)
             process_next_page = has_next_page
     return process_next_page, next_max_id
 
