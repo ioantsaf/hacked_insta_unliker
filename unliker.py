@@ -5,8 +5,6 @@ from sys import exit
 
 from instagram_private_api import Client
 
-date_threshold_str = '2020/09/01'
-
 excluded_users = []
 suspicious_likes = []
 
@@ -103,6 +101,7 @@ def display_menu(client):
 
 
 def main():
+    date_threshold_str = '2020/09/01'
     username = None
     password = None
 
